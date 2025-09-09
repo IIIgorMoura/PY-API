@@ -58,4 +58,40 @@ class Carros(mybd.Model):
 @app.route('/carros', methods=['GET'])
 def seleciona_carro():
     # var para armazenar o que recebemos da API
+        # retorna tudo na estrutura de colunas
     carro_selecionado = Carros.query.all()
+
+        # por isso precisa ser convertido   
+    carro_json = [
+        # esse 'to_json' é a função que definimos dentro da classe previamente
+        carro.to_json()
+        for carro in carro_selecionado           
+    ]
+
+    # não precisa do make_response
+        # status, 'nome do conteúdo', 'conteudo'
+    return gera_resposta(200, "carros", "{}")
+
+
+
+# Respostas padrão
+    # status (http) 200 = deu certo; 
+    # nome do conteúdo
+    # conteudo
+    # mensagem (opcional)
+
+def gera_resposta(status, nome_do_conteudo, conteudo, mensagem=False):
+    body = {}
+    body[nome_do_conteudo] = conteudo
+    if (mensagem):
+        body['mensagem'] = mensagem
+
+    return Response(json.dumps(body), status=status, mimetype='application/json')
+# Dumps - Converte o Dict (body) em Json(json.dumps)
+
+
+
+# --------------------------------------------
+# execução
+    # debug é para não bloquear, pois sem ele acha que está no modo produção
+app.run(port=5000, host='localhost', debug=True)
