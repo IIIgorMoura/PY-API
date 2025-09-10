@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 # URI] = 'siteDB://user:senha' // '%40' é o '@', pq o char @ é usado como declarador do IP
 # 1: User - 2: Senha - 3: 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Senai%40134@127.0.0.1/db_carro'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Senai%40134@127.0.0.1/db_carro'
 
 
 
@@ -70,7 +70,7 @@ def seleciona_carro():
 
     # não precisa do make_response
         # status, 'nome do conteúdo', 'conteudo'
-    return gera_resposta(200, "carros", "{}")
+    return gera_resposta(200, "carros", carro_json)
 
 
 
