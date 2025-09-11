@@ -55,8 +55,12 @@ def select_clientes():
 
 # # --------------------------------------
 # # Method 1.1: GET Filtro (Read)
-# @app.route('/clientes', methods=['GET'])
-# def select_clientes_filter():
+@app.route('/clientes/<int:id_cliente_p>', methods=['GET'])
+def select_clientes_filter(id_cliente_p):
+    select_cliente_id = Clientes.query.filter_by(id_cliente=id_cliente_p).first()
+    cliente_json = select_cliente_id.to_json()
+
+    return gera_resposta(200, cliente_json)
 
 
 
