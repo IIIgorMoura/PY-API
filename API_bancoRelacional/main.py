@@ -74,21 +74,109 @@ def seleciona_carro():
 
 
 
+# --------------------------------------------
+# Method 2 - GET (POR ID)
+@app.route('/carros/<int:id_carro_p>', methods=['GET'])
+def seleciona_carro_id(id_carro_p):
+    carro_selecionado = Carros.query.filter_by(id_carro=int(id_carro_p)).first()
+    carro_json = carro_selecionado.to_json()
+    return gera_resposta(200, carro_json, 'Carro encontrado!')
+
+
+
+
 # Respostas padrão
     # status (http) 200 = deu certo; 
     # nome do conteúdo
     # conteudo
     # mensagem (opcional)
 
-def gera_resposta(status, nome_do_conteudo, conteudo, mensagem=False):
+def gera_resposta(status, conteudo, mensagem=False):
     body = {}
-    body[nome_do_conteudo] = conteudo
+    body['Lista de Carros'] = conteudo
     if (mensagem):
         body['mensagem'] = mensagem
 
     return Response(json.dumps(body), status=status, mimetype='application/json')
 # Dumps - Converte o Dict (body) em Json(json.dumps)
 
+
+
+# ---------------------------------------------
+# Method 3 - POST
+@app.route('/carros', methods=['POST'])
+def criar_carro():
+    requisicao = request.get_json()
+
+    try:
+        carro = Carros(
+            id_carro = requisicao['id_carro'],
+            marca = requisicao['marca'],
+            modelo = requisicao['modelo'],
+            ano = requisicao['ano'],
+            valor = requisicao['valor'],
+            cor = requisicao['cor'],
+            numero_vendas = requisicao['numero_vendas']
+        )
+
+        
+        # semelhante ao Commit manual no SQL
+        mybd.session.add(carro)
+        # enviar 'commitar' ao banco
+        mybd.session.commit()
+
+        return gera_resposta(201, carro.to_json(), 'Criado com sucesso')
+    
+    except Exception as e:
+        print('Erro ao tentar postar: ', e)
+        return gera_resposta(400, {}, 'Erro ao cadastrar!')
+        
+
+
+# --------------------------------------------
+# Method 4 - DELETE
+    # alguns dão erro por ter/ser chave estrangeira
+@app.route('/carros/<id_carro_p>', methods=['DELETE'])
+def deleta_carro(id_carro_p):
+    carro = Carros.query.filter_by(id_carro = id_carro_p).first()
+
+    try:
+        mybd.session.delete(carro)
+        mybd.session.commit()
+        return gera_resposta(200, carro.to_json(), "Deletado com sucesso!")
+    except Exception as e:
+        print('Erro ao tentar deletar:', e)
+        return gera_resposta(400, {}, "Erro ao deletar!")
+
+
+
+# --------------------------------------------
+# Method 5 - PUT
+@app.route('/carro/<id_carro_p>', methods=['PUT'])
+def atualiza_carro(id_carro_p):
+    carro = Carros.query.filter_by(id_carro = id_carro_p).first()
+    requisicao = request.get_json()
+
+    try:
+        if ('marca' in requisicao):
+            carro.marca = requisicao['marca']
+        if ('modelo' in requisicao):
+            carro.modelo = requisicao['modelo']
+        if ('ano' in requisicao):
+            carro.ano = requisicao['ano']
+        if ('valor' in requisicao):
+            carro.valor = requisicao['valor']
+        if ('cor' in requisicao):
+            carro.cor = requisicao['cor']
+        if ('numero_vendas' in requisicao):
+            carro.numero_vendas = requisicao['numero_vendas']
+
+        mybd.session.add(carro)
+        mybd.session.commit()
+
+        return gera_resposta(200, carro.to_json(), "Atualizado")
+    except Exception as e:
+        print("Erro ao tentar atualizar: ", e)
 
 
 # --------------------------------------------
