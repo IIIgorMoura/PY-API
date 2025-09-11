@@ -179,6 +179,7 @@ def atualiza_carro(id_carro_p):
         print("Erro ao tentar atualizar: ", e)
 
 
+
 # --------------------------------------------
 # execução
     # debug é para não bloquear, pois sem ele acha que está no modo produção
