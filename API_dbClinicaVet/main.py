@@ -65,19 +65,36 @@ def select_clientes_filter(id_cliente_p):
 
 
 # # ---------------------------------------
-# # Method 1: POST (Create)
-# @app.route('/clientes', methods=['POST'])
-           
+# Method 2: POST (Create)
+@app.route('/clientes', methods=['POST'])
+def cadastrar_cliente():
+    requisicao = request.get_json()
 
+    try:
+        cliente = Clientes(
+            id_cliente = requisicao['id_cliente'],
+            nome = requisicao['nome'],
+            endereco = requisicao['endereco'],
+            telefone = requisicao['telefone']
+        )
+
+        db.session.add(cliente)
+        db.session.commit()
+
+        return gera_resposta(201, cliente.to_json(), 'Cliente cadastrado com sucesso!')
+
+    except Exception as e:
+        print('Erro ao tentar cadastrar o cliente: ', e)
+        return gera_resposta(400, {}, 'Erro ao tentar cadastrar o cliente')
 
 # # --------------------------------------
-# # Method 1: PUT (Update)
+# # Method 3: PUT (Update)
 # @app.route('/clientes', methods=['PUT'])
            
 
 
 # # -----------------------------------------
-# # Method 1: DELETE (Delete)
+# # Method 4: DELETE (Delete)
 # @app.route('/clientes', methods=['DELETE'])
 
 
