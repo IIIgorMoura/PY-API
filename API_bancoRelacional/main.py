@@ -152,7 +152,7 @@ def deleta_carro(id_carro_p):
 
 # --------------------------------------------
 # Method 5 - PUT
-@app.route('/carro/<id_carro_p>', methods=['PUT'])
+@app.route('/carros/<id_carro_p>', methods=['PUT'])
 def atualiza_carro(id_carro_p):
     carro = Carros.query.filter_by(id_carro = id_carro_p).first()
     requisicao = request.get_json()
