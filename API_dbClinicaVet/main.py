@@ -38,7 +38,7 @@ def gera_resposta(status, conteudo, mensagem=False):
 
 
 
-# --------------------------------------
+# # --------------------------------------
 # Method 1: GET (Read)
 @app.route('/clientes', methods=['GET'])
 def select_clientes():
@@ -112,9 +112,18 @@ def update_cliente(id_cliente_p):
         
 
 # # -----------------------------------------
-# # Method 4: DELETE (Delete)
-# @app.route('/clientes', methods=['DELETE'])
+# Method 4: DELETE (Delete)
+@app.route('/clientes/<id_cliente_p>', methods=['DELETE'])
+def delete_cliente(id_cliente_p):
+    select_cliente_id = Clientes.query.filter_by(id_cliente=id_cliente_p).first()
 
+    try:
+        db.session.delete(select_cliente_id)
+        db.session.commit()
+        return gera_resposta(200, select_cliente_id.to_json(), "Deletado com sucesso!")
+    except Exception as e:
+        print('Erro ao tentar deletar o cliente:', e)
+        return gera_resposta(400, {}, "Erro ao tentar deletar!")
 
 
 # -----------------------------------------
