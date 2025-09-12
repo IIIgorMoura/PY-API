@@ -237,6 +237,22 @@ def delete_cliente(id_cliente_p):
         return gera_resposta(400, {}, "Erro ao tentar deletar!")
 
 
+
+# //------------------//
+@app.route('/pets/<id_pet_p>', methods=['DELETE'])
+def delete_pet(id_pet_p):
+    select_pet_id = Pets.query.filter_by(id_pet=id_pet_p).first()
+
+    try:
+        db.session.delete(select_pet_id)
+        db.session.commit()
+        return gera_resposta(200, select_pet_id.to_json(), "Deletado com sucesso!")
+    except Exception as e:
+        print('Erro ao tentar deletar o pet:', e)
+        return gera_resposta(400, {}, "Erro ao tentar deletar!")
+
+
+
 # -----------------------------------------
 # Executar API
 app.run(port=5000, host='localhost', debug=True)
