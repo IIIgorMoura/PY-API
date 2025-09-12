@@ -24,6 +24,17 @@ class Clientes (db.Model):
             "telefone": self.telefone
         }
     
+
+
+class Pets (db.Model):
+    __tablename__ = 'tb_pets'
+    id_pet = db.Column(db.Integer, primary_key = True)
+    tipo = db.Column(db.String(255))
+    raca = db.Column(db.String(255))
+    data_nascimento = db.Column(db.Date())
+    id_cliente = db.Column(db.Integer, db.ForeignKey('tb_clientes.id_cliente'), nullable=False)
+    idade = db.Column(db.String(10))
+    
 # CRUD = Create Read Update Delete
 
 
