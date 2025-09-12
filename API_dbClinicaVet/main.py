@@ -88,10 +88,28 @@ def cadastrar_cliente():
         return gera_resposta(400, {}, 'Erro ao tentar cadastrar o cliente')
 
 # # --------------------------------------
-# # Method 3: PUT (Update)
-# @app.route('/clientes', methods=['PUT'])
-           
+# Method 3: PUT (Update)
+@app.route('/clientes/<id_cliente_p>', methods=['PUT'])
+def update_cliente(id_cliente_p):
+    select_cliente_id = Clientes.query.filter_by(id_cliente=id_cliente_p).first()
+    requisicao = request.get_json()
 
+    try:
+        if ('nome' in requisicao):
+            select_cliente_id.nome = requisicao['nome']
+        if ('endereco' in requisicao):
+            select_cliente_id.endereco = requisicao['endereco']
+        if ('telefone' in requisicao):  
+            select_cliente_id.telefone = requisicao['telefone']
+    
+        db.session.add(select_cliente_id)
+        db.session.commit()
+
+        return gera_resposta(200, select_cliente_id.to_json(), 'Dados do cliente atualizados!')
+    
+    except Exception as e:
+        print('Err ao tentar atualizar: ', e)
+        
 
 # # -----------------------------------------
 # # Method 4: DELETE (Delete)
