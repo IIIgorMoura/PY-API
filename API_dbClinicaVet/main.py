@@ -188,6 +188,38 @@ def update_cliente(id_cliente_p):
     
     except Exception as e:
         print('Err ao tentar atualizar: ', e)
+
+
+
+# //------------------//
+@app.route('/pets/<id_pet_p>', methods=['PUT'])
+def update_pet(id_pet_p):
+    select_pet_id = Pets.query.filter_by(id_pet=id_pet_p).first()
+    requisicao = request.get_json()
+
+    try:
+        if ('nome' in requisicao):
+            select_pet_id.nome = requisicao['nome']
+        if ('tipo' in requisicao):
+            select_pet_id.tipo = requisicao['tipo']
+        if ('raca' in requisicao):
+            select_pet_id.raca = requisicao['raca']
+        if ('data_nascimento' in requisicao):
+            select_pet_id.data_nascimento = requisicao['data_nascimento']
+        if ('id_cliente' in requisicao):
+            select_pet_id.id_clienteF = requisicao['id_cliente']
+        if ('idade' in requisicao):
+            select_pet_id.idade = requisicao['idade']
+    
+        db.session.add(select_pet_id)
+        db.session.commit()
+
+        return gera_resposta(200, select_pet_id.to_json(), 'Dados do pet atualizados!')
+    
+    except Exception as e:
+        print('Err ao tentar atualizar: ', e)
+
+
         
 
 # # -----------------------------------------
